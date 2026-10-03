@@ -30,6 +30,16 @@
 
 **Próximo passo:** atualizar o clone, criar `Game` pela configuração indicada e confirmar sua abertura no editor.
 
+## 03/10/2026 — gerador da organização de pastas
+
+**Realizado:** preparação de `Tools/CreateProjectStructure.cmd`, que cria 19 pastas finais dentro de `Game/Assets/_Game` para scripts, sprites dos seis tipos de peças, tabuleiro, interface, cenas, prefabs e dados. A pasta do Cavalo segue `Horse`, como no esquema fornecido por Arthur.
+
+**Comportamento:** exige um projeto Unity já criado; preserva arquivos existentes; usa `.gitkeep` para rastrear pastas vazias; não cria arquivos `.meta` manualmente.
+
+**Verificação:** lista de pastas e correspondência com a arquitetura conferidas; gerador revisado estaticamente. Não foi executado em Windows ou Unity neste ambiente.
+
+**Estado:** gerador pronto no repositório; sua execução no computador de Arthur e a importação no editor ainda estão pendentes. Nenhuma implementação de gameplay foi acrescentada.
+
 ## Modelo para futuras entradas
 
 Data; tarefa; arquivos ou commit; comportamento entregue; verificação feita; problemas restantes; próximo passo.

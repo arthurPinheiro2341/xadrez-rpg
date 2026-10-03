@@ -17,6 +17,8 @@ O README, `docs`, `.gitignore` e `.gitattributes` ficam na raiz do repositório.
 
 Depois de criar:
 
+1. Executar `.\Tools\CreateProjectStructure.cmd` no PowerShell aberto na raiz do clone. O gerador monta todas as pastas em `Game/Assets/_Game`.
+2. Abrir ou voltar ao editor para importar essas pastas e gerar seus `.meta`.
 3. Criar uma cena de partida e começar por 64 casas, coordenadas e seleção.
 4. Usar peças provisórias identificáveis para todos os seis tipos.
 5. Salvar cenas e assets pelo editor antes do primeiro commit Unity.

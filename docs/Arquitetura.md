@@ -32,7 +32,7 @@ O salto não detecta colisão física para decidir dano. O resultado vem das reg
 
 ## Pastas Unity planejadas
 
-Criar quando houver projeto Unity real. Não estão preenchidas neste pacote. O projeto ficará na subpasta `Game` do repositório; os caminhos abaixo são relativos a ela. Por exemplo, `Assets/_Game/Scenes/` corresponde a `Game/Assets/_Game/Scenes/` no Git.
+O gerador `Tools/CreateProjectStructure.cmd` cria todas as pastas abaixo após existir um projeto Unity real. Ele não cria código, imagens ou cenas e pode ser executado novamente sem sobrescrever arquivos. O projeto ficará na subpasta `Game` do repositório; os caminhos abaixo são relativos a ela. Por exemplo, `Assets/_Game/Scenes/` corresponde a `Game/Assets/_Game/Scenes/` no Git.
 
 | Pasta | Uso |
 |---|---|
@@ -46,7 +46,7 @@ Criar quando houver projeto Unity real. Não estão preenchidas neste pacote. O 
 | `Assets/_Game/Scripts/UI/` | Seleção e informações |
 | `Assets/_Game/Scripts/Presentation/` | Saltos e feedback |
 | `Assets/_Game/Sprites/Pieces/Pawn/` | `pawn_normal.png`, `pawn_ninja.png` |
-| `Assets/_Game/Sprites/Pieces/Knight/` | `knight_normal.png`, `knight_trojan.png` |
+| `Assets/_Game/Sprites/Pieces/Horse/` | `horse_normal.png`, `horse_trojan.png` |
 | `Assets/_Game/Sprites/Pieces/King/` | `king_normal.png` |
 | `Assets/_Game/Sprites/Pieces/Rook/` | `rook_normal.png` |
 | `Assets/_Game/Sprites/Pieces/Bishop/` | `bishop_normal.png` |
@@ -56,7 +56,18 @@ Criar quando houver projeto Unity real. Não estão preenchidas neste pacote. O 
 | `Assets/_Game/Prefabs/` | Casa, peça e feedback de dano |
 | `Assets/_Game/Data/` | Definições compartilhadas |
 
-Usar `Knight` para Cavalo como padrão de nomes. Os nomes `horse_*` usados na conversa são equivalentes conceituais; só renomear arquivos reais quando importados, preservando suas referências.
+Manter a pasta `Horse` e os nomes `horse_*` do esquema enviado por Arthur. `Knight` pode ser usado como nome do tipo lógico do Cavalo de xadrez; não exige renomear as imagens.
+
+## Criar as pastas
+
+Na raiz do clone, depois de criar o projeto `Game`, executar no PowerShell:
+
+```powershell
+git pull --ff-only
+.\Tools\CreateProjectStructure.cmd
+```
+
+O gerador exige `Game/Assets`, `Game/Packages` e `Game/ProjectSettings`. Ele cria um `.gitkeep` em cada pasta final para que o Git preserve pastas ainda vazias. Esses marcadores não são sprites nem scripts. Ao importar as pastas, deixar a Unity gerar os arquivos `.meta` e incluí-los no próximo commit.
 
 ## Cuidados de implementação
 

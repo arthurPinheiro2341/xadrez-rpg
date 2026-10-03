@@ -16,3 +16,4 @@
 *.ogg binary
 *.ttf binary
 *.otf binary
+*.cmd text eol=crlf

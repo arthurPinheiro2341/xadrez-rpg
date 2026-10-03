@@ -13,13 +13,13 @@ As sprites anteriores foram aprovadas na conversa, mas seus arquivos não foram 
 | Arquivo | Prioridade | Situação neste pacote |
 |---|---|---|
 | `pawn_normal.png` | Base | Não disponível |
-| `knight_normal.png` | Base | Não disponível |
+| `horse_normal.png` | Base | Não disponível |
 | `bishop_normal.png` | Base | Não disponível |
 | `rook_normal.png` | Base | Não disponível |
 | `queen_normal.png` | Base | Não disponível |
 | `king_normal.png` | Base | Não disponível |
 | `pawn_ninja.png` | Evolução | Não disponível |
-| `knight_trojan.png` | Evolução | Não disponível |
+| `horse_trojan.png` | Evolução | Não disponível |
 | `board_basic.png` | Opcional | Não disponível |
 | `coin_icon.png`, `health_icon.png`, `damage_icon.png` | Interface | Não disponíveis |
 | `piece_shadow.png` | Opcional | Não disponível |
