@@ -22,7 +22,7 @@ Clonar o repositório pela conta com acesso, usando GitHub Desktop ou Git. Pelo 
 git clone https://github.com/arthurPinheiro2341/xadrez-rpg.git
 ```
 
-O histórico remoto é a fonte dos commits. Usar o clone para continuar o trabalho, em vez de inicializar um Git separado a partir do ZIP antigo. Depois adicionar `Assets`, `Packages` e `ProjectSettings` do projeto real conforme [Começar na Unity](ComecarNaUnity.md).
+O histórico remoto é a fonte dos commits. Usar o clone para continuar o trabalho, em vez de inicializar um Git separado a partir do ZIP antigo. O projeto Unity será criado na subpasta `Game`. Versionar `Game/Assets`, `Game/Packages` e `Game/ProjectSettings` conforme [Começar na Unity](ComecarNaUnity.md).
 
 ## Fluxo de trabalho sugerido
 

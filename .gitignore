@@ -1,13 +1,13 @@
-# Caches e arquivos locais Unity. Manter Assets e todos os .meta.
-/[Ll]ibrary/
-/[Tt]emp/
-/[Oo]bj/
-/[Bb]uild/
-/[Bb]uilds/
-/[Ll]ogs/
-/[Uu]ser[Ss]ettings/
-/[Mm]emoryCaptures/
-/[Rr]ecordings/
+# Caches e arquivos locais Unity, inclusive em Game/. Manter Assets e todos os .meta.
+[Ll]ibrary/
+[Tt]emp/
+[Oo]bj/
+[Bb]uild/
+[Bb]uilds/
+[Ll]ogs/
+[Uu]ser[Ss]ettings/
+[Mm]emoryCaptures/
+[Rr]ecordings/
 
 # IDE e arquivos gerados
 .vs/

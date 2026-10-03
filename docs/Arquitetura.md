@@ -32,7 +32,7 @@ O salto não detecta colisão física para decidir dano. O resultado vem das reg
 
 ## Pastas Unity planejadas
 
-Criar quando houver projeto Unity real. Não estão preenchidas neste pacote.
+Criar quando houver projeto Unity real. Não estão preenchidas neste pacote. O projeto ficará na subpasta `Game` do repositório; os caminhos abaixo são relativos a ela. Por exemplo, `Assets/_Game/Scenes/` corresponde a `Game/Assets/_Game/Scenes/` no Git.
 
 | Pasta | Uso |
 |---|---|

@@ -20,6 +20,16 @@
 
 **Próximo passo:** confirmar versão Unity e regras essenciais; iniciar o marco de tabuleiro e seleção.
 
+## 03/10/2026 — preparação da criação na Unity
+
+**Evidência:** Arthur informou que clonou o repositório e enviou a tela de criação do Hub, com editor 6000.3.7f1 LTS e template Universal 2D selecionados.
+
+**Realizado:** configuração Git ajustada para ignorar caches e builds também dentro de subpastas; documentação alinhada ao projeto Unity planejado em `Game`.
+
+**Estado:** criação ainda em preparação no computador de Arthur. Nenhuma cena, script ou build recebida ou testada nesta etapa.
+
+**Próximo passo:** atualizar o clone, criar `Game` pela configuração indicada e confirmar sua abertura no editor.
+
 ## Modelo para futuras entradas
 
 Data; tarefa; arquivos ou commit; comportamento entregue; verificação feita; problemas restantes; próximo passo.
