@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 namespace XadrezRpg.Board
 {
-    [RequireComponent(typeof(RectTransform), typeof(GridLayoutGroup))]
+    [RequireComponent(typeof(RectTransform))]
     public sealed class BoardView : MonoBehaviour
     {
         private const int TileCountExpected = BoardCoordinate.BoardSize * BoardCoordinate.BoardSize;
@@ -14,10 +14,18 @@ namespace XadrezRpg.Board
         [SerializeField] private Vector2 tileSize = new Vector2(88f, 88f);
         [SerializeField] private Vector2 spacing = new Vector2(2f, 2f);
 
+        [Header("Artwork")]
+        [SerializeField] private Sprite artworkSprite;
+        [SerializeField] private bool showCoordinateLabels = true;
+        [SerializeField] private Vector2 artworkPixelSize;
+        [SerializeField] private float artworkDisplaySize;
+        [SerializeField] private float[] artworkColumnEdges;
+        [SerializeField] private float[] artworkRowEdges;
+
         [Header("Colors")]
         [SerializeField] private Color lightTileColor = new Color(0.91f, 0.86f, 0.73f, 1f);
         [SerializeField] private Color darkTileColor = new Color(0.24f, 0.36f, 0.31f, 1f);
-        [SerializeField] private Color selectedTileColor = new Color(1f, 0.66f, 0.12f, 1f);
+        [SerializeField] private Color selectedTileColor = new Color(1f, 0.66f, 0.12f, 0.48f);
 
         [SerializeField] private List<BoardTileView> tiles = new List<BoardTileView>(TileCountExpected);
 
@@ -39,7 +47,8 @@ namespace XadrezRpg.Board
 
         public void GenerateBoard()
         {
-            ConfigureGrid();
+            bool useMeasuredArtworkLayout = HasMeasuredArtworkLayout();
+            ConfigureGrid(!useMeasuredArtworkLayout);
             ClearBoard();
 
             Font labelFont = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
@@ -60,13 +69,45 @@ namespace XadrezRpg.Board
                 background.color = tileColor;
                 background.raycastTarget = true;
 
-                Text label = CreateCoordinateLabel(tileObject.transform, labelFont, tileColor);
+                Text label = showCoordinateLabels
+                    ? CreateCoordinateLabel(tileObject.transform, labelFont, coordinate)
+                    : null;
                 BoardTileView tile = tileObject.GetComponent<BoardTileView>();
                 tile.Initialize(this, coordinate, background, label, tileColor, selectedTileColor);
+
+                if (useMeasuredArtworkLayout)
+                {
+                    ConfigureArtworkTileRect((RectTransform)tileObject.transform, displayIndex);
+                }
+
                 tiles.Add(tile);
             }
 
             LayoutRebuilder.ForceRebuildLayoutImmediate((RectTransform)transform);
+        }
+
+        public void SetArtwork(Sprite sprite, bool hideCoordinateLabels = true)
+        {
+            artworkSprite = sprite;
+            showCoordinateLabels = !hideCoordinateLabels;
+        }
+
+        public void SetTileLayout(Vector2 size, Vector2 tileSpacing)
+        {
+            tileSize = size;
+            spacing = tileSpacing;
+        }
+
+        public void SetArtworkLayout(
+            Vector2 sourcePixelSize,
+            float displaySize,
+            float[] columnEdges,
+            float[] rowEdges)
+        {
+            artworkPixelSize = sourcePixelSize;
+            artworkDisplaySize = displaySize;
+            artworkColumnEdges = columnEdges != null ? (float[])columnEdges.Clone() : null;
+            artworkRowEdges = rowEdges != null ? (float[])rowEdges.Clone() : null;
         }
 
         public bool TryGetTile(BoardCoordinate coordinate, out BoardTileView tile)
@@ -144,9 +185,25 @@ namespace XadrezRpg.Board
             return true;
         }
 
-        private void ConfigureGrid()
+        private void ConfigureGrid(bool enabled)
         {
             grid = GetComponent<GridLayoutGroup>();
+            if (grid == null && enabled)
+            {
+                grid = gameObject.AddComponent<GridLayoutGroup>();
+            }
+
+            if (grid == null)
+            {
+                return;
+            }
+
+            grid.enabled = enabled;
+            if (!enabled)
+            {
+                return;
+            }
+
             grid.cellSize = tileSize;
             grid.spacing = spacing;
             grid.startCorner = GridLayoutGroup.Corner.UpperLeft;
@@ -154,6 +211,40 @@ namespace XadrezRpg.Board
             grid.childAlignment = TextAnchor.MiddleCenter;
             grid.constraint = GridLayoutGroup.Constraint.FixedColumnCount;
             grid.constraintCount = BoardCoordinate.BoardSize;
+        }
+
+        private bool HasMeasuredArtworkLayout()
+        {
+            int expectedEdgeCount = BoardCoordinate.BoardSize + 1;
+            return artworkSprite != null
+                && artworkPixelSize.x > 0f
+                && artworkPixelSize.y > 0f
+                && artworkDisplaySize > 0f
+                && artworkColumnEdges != null
+                && artworkColumnEdges.Length == expectedEdgeCount
+                && artworkRowEdges != null
+                && artworkRowEdges.Length == expectedEdgeCount;
+        }
+
+        private void ConfigureArtworkTileRect(RectTransform tileRect, int displayIndex)
+        {
+            int column = displayIndex % BoardCoordinate.BoardSize;
+            int row = displayIndex / BoardCoordinate.BoardSize;
+            float scaleX = artworkDisplaySize / artworkPixelSize.x;
+            float scaleY = artworkDisplaySize / artworkPixelSize.y;
+
+            float left = artworkColumnEdges[column] * scaleX;
+            float right = artworkColumnEdges[column + 1] * scaleX;
+            float top = artworkRowEdges[row] * scaleY;
+            float bottom = artworkRowEdges[row + 1] * scaleY;
+
+            tileRect.anchorMin = new Vector2(0.5f, 0.5f);
+            tileRect.anchorMax = new Vector2(0.5f, 0.5f);
+            tileRect.pivot = new Vector2(0.5f, 0.5f);
+            tileRect.sizeDelta = new Vector2(right - left, bottom - top);
+            tileRect.anchoredPosition = new Vector2(
+                -artworkDisplaySize * 0.5f + (left + right) * 0.5f,
+                artworkDisplaySize * 0.5f - (top + bottom) * 0.5f);
         }
 
         private void ClearBoard()
@@ -177,10 +268,15 @@ namespace XadrezRpg.Board
 
         private Color GetTileColor(BoardCoordinate coordinate)
         {
+            if (artworkSprite != null)
+            {
+                return Color.clear;
+            }
+
             return (coordinate.File + coordinate.Rank) % 2 == 0 ? darkTileColor : lightTileColor;
         }
 
-        private static Text CreateCoordinateLabel(Transform tile, Font font, Color tileColor)
+        private static Text CreateCoordinateLabel(Transform tile, Font font, BoardCoordinate coordinate)
         {
             GameObject labelObject = new GameObject(
                 "Coordinate",
@@ -200,9 +296,8 @@ namespace XadrezRpg.Board
             label.fontSize = 17;
             label.alignment = TextAnchor.LowerLeft;
             label.raycastTarget = false;
-
-            float luminance = tileColor.r * 0.299f + tileColor.g * 0.587f + tileColor.b * 0.114f;
-            label.color = luminance > 0.55f
+            bool lightSquare = (coordinate.File + coordinate.Rank) % 2 != 0;
+            label.color = lightSquare
                 ? new Color(0.08f, 0.12f, 0.10f, 0.72f)
                 : new Color(0.95f, 0.92f, 0.82f, 0.78f);
             return label;

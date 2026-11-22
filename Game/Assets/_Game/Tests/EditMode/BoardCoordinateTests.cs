@@ -65,5 +65,42 @@ namespace XadrezRpg.Tests.EditMode
                 Object.DestroyImmediate(boardObject);
             }
         }
+
+        [Test]
+        public void ArtworkLayout_UsesMeasuredTileEdges()
+        {
+            GameObject boardObject = new GameObject("Artwork Board Test", typeof(RectTransform), typeof(BoardView));
+            Texture2D texture = new Texture2D(1, 1);
+            Sprite artwork = Sprite.Create(texture, new Rect(0f, 0f, 1f, 1f), Vector2.one * 0.5f);
+
+            try
+            {
+                float[] columns = { 133f, 256f, 381f, 502f, 627f, 750f, 874f, 997f, 1128f };
+                float[] rows = { 129f, 258f, 385f, 512f, 636f, 764f, 890f, 1010f, 1132f };
+                BoardView board = boardObject.GetComponent<BoardView>();
+                board.SetArtwork(artwork);
+                board.SetArtworkLayout(new Vector2(1254f, 1254f), 718f, columns, rows);
+                board.GenerateBoard();
+
+                Assert.That(board.TryGetTile(new BoardCoordinate(0, 7), out BoardTileView a8), Is.True);
+                RectTransform tileRect = (RectTransform)a8.transform;
+                float scale = 718f / 1254f;
+
+                Assert.That(tileRect.sizeDelta.x, Is.EqualTo((256f - 133f) * scale).Within(0.01f));
+                Assert.That(tileRect.sizeDelta.y, Is.EqualTo((258f - 129f) * scale).Within(0.01f));
+                Assert.That(
+                    tileRect.anchoredPosition.x,
+                    Is.EqualTo(-359f + ((133f + 256f) * 0.5f * scale)).Within(0.01f));
+                Assert.That(
+                    tileRect.anchoredPosition.y,
+                    Is.EqualTo(359f - ((129f + 258f) * 0.5f * scale)).Within(0.01f));
+            }
+            finally
+            {
+                Object.DestroyImmediate(artwork);
+                Object.DestroyImmediate(texture);
+                Object.DestroyImmediate(boardObject);
+            }
+        }
     }
 }

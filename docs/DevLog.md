@@ -42,6 +42,8 @@
 
 ## 22/11/2026 — projeto Unity e tabuleiro 8×8
 
+**Visual:** integrado `tabuleiro_medieval.aseprite` como fundo do tabuleiro. As 64 casas permanecem como áreas de clique transparentes e a seleção usa um destaque semitransparente sobre a arte.
+
 **Realizado:** criação do projeto `Game` em Unity 6000.6.10f1 com Universal 2D; execução do gerador de pastas; criação da cena `Assets/_Game/Scenes/Board.unity`; implementação de coordenadas algébricas, geração das 64 casas e seleção visual por clique.
 
 **Arquitetura:** `BoardCoordinate` converte entre arquivo/fileira, notação algébrica e índice visual; `BoardView` gera e consulta as casas; `BoardTileView` encaminha o clique e aplica o destaque. A ferramenta `Xadrez RPG/Create Board Scene` recria a cena inicial e a coloca primeiro no Build Settings.

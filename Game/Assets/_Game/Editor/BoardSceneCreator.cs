@@ -13,6 +13,20 @@ namespace XadrezRpg.Editor
     public static class BoardSceneCreator
     {
         public const string ScenePath = "Assets/_Game/Scenes/Board.unity";
+        public const string ArtworkPath = "Assets/_Game/Sprites/Board/tabuleiro_medieval.aseprite";
+
+        private const float ArtworkPixelSize = 1254f;
+        private const float ArtworkDisplaySize = 718f;
+
+        private static readonly float[] ArtworkColumnEdges =
+        {
+            133f, 256f, 381f, 502f, 627f, 750f, 874f, 997f, 1128f
+        };
+
+        private static readonly float[] ArtworkRowEdges =
+        {
+            129f, 258f, 385f, 512f, 636f, 764f, 890f, 1010f, 1132f
+        };
 
         [MenuItem("Xadrez RPG/Create Board Scene")]
         public static void CreateBoardScene()
@@ -69,21 +83,52 @@ namespace XadrezRpg.Editor
 
         private static void CreateBoard(Transform canvas)
         {
+            Sprite artwork = AssetDatabase.LoadAllAssetsAtPath(ArtworkPath)
+                .OfType<Sprite>()
+                .OrderByDescending(sprite => sprite.rect.width * sprite.rect.height)
+                .FirstOrDefault();
+
+            GameObject frameObject = new GameObject(
+                "Board Frame",
+                typeof(RectTransform),
+                typeof(CanvasRenderer),
+                typeof(Image));
+            frameObject.transform.SetParent(canvas, false);
+
+            RectTransform frameRect = (RectTransform)frameObject.transform;
+            frameRect.anchorMin = new Vector2(0.5f, 0.5f);
+            frameRect.anchorMax = new Vector2(0.5f, 0.5f);
+            frameRect.pivot = new Vector2(0.5f, 0.5f);
+            frameRect.sizeDelta = new Vector2(ArtworkDisplaySize, ArtworkDisplaySize);
+            frameRect.anchoredPosition = Vector2.zero;
+
+            Image frameImage = frameObject.GetComponent<Image>();
+            frameImage.sprite = artwork;
+            frameImage.color = Color.white;
+            frameImage.preserveAspect = true;
+            frameImage.raycastTarget = false;
+
             GameObject boardObject = new GameObject(
                 "Board",
                 typeof(RectTransform),
                 typeof(GridLayoutGroup),
                 typeof(BoardView));
-            boardObject.transform.SetParent(canvas, false);
+            boardObject.transform.SetParent(frameObject.transform, false);
 
             RectTransform boardRect = (RectTransform)boardObject.transform;
             boardRect.anchorMin = new Vector2(0.5f, 0.5f);
             boardRect.anchorMax = new Vector2(0.5f, 0.5f);
             boardRect.pivot = new Vector2(0.5f, 0.5f);
-            boardRect.sizeDelta = new Vector2(718f, 718f);
+            boardRect.sizeDelta = new Vector2(ArtworkDisplaySize, ArtworkDisplaySize);
             boardRect.anchoredPosition = Vector2.zero;
 
             BoardView board = boardObject.GetComponent<BoardView>();
+            board.SetArtwork(artwork);
+            board.SetArtworkLayout(
+                new Vector2(ArtworkPixelSize, ArtworkPixelSize),
+                ArtworkDisplaySize,
+                ArtworkColumnEdges,
+                ArtworkRowEdges);
             board.GenerateBoard();
             Selection.activeGameObject = boardObject;
         }
