@@ -13,6 +13,8 @@ namespace XadrezRpg.Board
         [SerializeField] private Text coordinateLabel;
         [SerializeField] private Color normalColor;
         [SerializeField] private Color selectedColor;
+        [SerializeField] private Color legalMoveColor = new Color(0.2f, 0.75f, 0.3f, 0.42f);
+        [SerializeField] private Color captureColor = new Color(0.92f, 0.18f, 0.16f, 0.48f);
 
         public BoardCoordinate Coordinate => coordinate;
         public bool IsSelected { get; private set; }
@@ -65,6 +67,23 @@ namespace XadrezRpg.Board
             {
                 background.color = selected ? selectedColor : normalColor;
             }
+        }
+
+        public void SetMoveHint(bool selected, bool legalMove, bool capture)
+        {
+            IsSelected = selected;
+            if (background == null)
+            {
+                return;
+            }
+
+            background.color = selected
+                ? selectedColor
+                : capture
+                    ? captureColor
+                    : legalMove
+                        ? legalMoveColor
+                        : normalColor;
         }
     }
 }

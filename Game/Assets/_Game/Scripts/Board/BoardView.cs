@@ -156,6 +156,35 @@ namespace XadrezRpg.Board
             SelectionChanged?.Invoke(selectedTile.Coordinate);
         }
 
+        public void ShowMoveHints(
+            BoardCoordinate? selected,
+            IEnumerable<BoardCoordinate> legalMoves,
+            IEnumerable<BoardCoordinate> captures)
+        {
+            HashSet<BoardCoordinate> legalSet = legalMoves != null
+                ? new HashSet<BoardCoordinate>(legalMoves)
+                : new HashSet<BoardCoordinate>();
+            HashSet<BoardCoordinate> captureSet = captures != null
+                ? new HashSet<BoardCoordinate>(captures)
+                : new HashSet<BoardCoordinate>();
+
+            selectedTile = null;
+            foreach (BoardTileView tile in tiles)
+            {
+                bool isSelected = selected.HasValue && tile.Coordinate == selected.Value;
+                tile.SetMoveHint(isSelected, legalSet.Contains(tile.Coordinate), captureSet.Contains(tile.Coordinate));
+                if (isSelected)
+                {
+                    selectedTile = tile;
+                }
+            }
+        }
+
+        public void ClearMoveHints()
+        {
+            ShowMoveHints(null, null, null);
+        }
+
         public Vector3 GetTileCenterWorldPosition(BoardCoordinate coordinate)
         {
             if (!TryGetTile(coordinate, out BoardTileView tile))

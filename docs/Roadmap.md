@@ -16,17 +16,17 @@ Sem datas inventadas. Ajustar ao calendário da disciplina quando as próximas e
 
 - [x] Tabuleiro 8×8 com conversão entre coordenadas e posição.
 - [x] Clique em casa e destaque visual da seleção.
-- [ ] Representação dos seis tipos de peças e dois jogadores.
-- [ ] Clique em peça e destaque de seleção.
-- [ ] Ocupação de casas consistente.
+- [x] Representação dos seis tipos de peças e dois jogadores.
+- [x] Clique em peça e destaque de seleção.
+- [x] Ocupação de casas consistente.
 
 Concluído quando cada peça está na casa correta e é selecionável sem alterar a partida.
 
 ## Marco 2 — movimentação e turnos
 
-- [ ] Movimento e alcance de ataque por tipo.
-- [ ] Casas válidas destacadas.
-- [ ] Uma ação principal por turno, se a proposta for confirmada.
+- [x] Movimento e alcance de captura por tipo no modo clássico.
+- [x] Casas válidas destacadas.
+- [x] Uma jogada por turno no modo clássico.
 - [ ] Salto compartilhado e comandos bloqueados durante resolução.
 
 Concluído quando movimentos legais funcionam e casas bloqueadas, fora do tabuleiro e peças do outro jogador são rejeitadas.
@@ -38,7 +38,7 @@ Concluído quando movimentos legais funcionam e casas bloqueadas, fora do tabule
 - [ ] Alvo morto: remoção e ocupação pelo atacante.
 - [ ] Vitória por morte do Rei, se confirmada.
 - [ ] Interface de turno, atributos e reinício.
-- [ ] Decisão para Peão na última fileira implementada.
+- [x] Promoção clássica do Peão para Rainha, Torre, Bispo ou Cavalo.
 
 Concluído quando dois jogadores conseguem terminar e reiniciar uma partida.
 

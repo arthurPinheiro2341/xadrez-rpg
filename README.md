@@ -6,7 +6,7 @@ Repositório privado: [arthurPinheiro2341/xadrez-rpg](https://github.com/arthurP
 
 Um jogo de estratégia por turnos baseado no xadrez, em que as peças têm vida, dano e classes. Durante a partida, o jogador recebe moedas e pode transformar suas peças em variantes com habilidades diferentes.
 
-**Estado em 22/11/2026:** projeto Unity criado com Universal 2D e primeiro marco iniciado. A cena `Board` já apresenta um tabuleiro 8×8 com coordenadas e seleção visual de casas. Ainda não há peças, movimentação, combate ou build jogável; os valores numéricos continuam sendo propostas de teste.
+**Estado em 22/11/2026:** a cena `Board` já oferece uma partida local de xadrez clássico para duas pessoas, com as 32 peças medievais, turnos, movimentos legais, captura, xeque, xeque-mate, afogamento, roque, en passant, promoção e reinício. Vida, dano, dinheiro, classes, bot e demais sistemas de RPG ainda não foram implementados.
 
 ## A ideia
 
@@ -27,9 +27,9 @@ O visual preserva a silhueta de peças de xadrez. Cada sprite é um arquivo sepa
 
 ## Primeira versão proposta
 
-Tabuleiro 8×8, seis tipos de peças, dois jogadores locais, combate por turnos, dinheiro e duas evoluções: Peão Ninja e Cavalo de Troia. A condição de vitória proposta é derrotar o Rei; xeque e xeque-mate tradicionais ficam fora dessa proposta.
+O primeiro estágio jogável usa xadrez clássico local como base. O estágio de RPG previsto acrescentará combate por vida, dinheiro e evoluções como Peão Ninja e Cavalo de Troia sem substituir o núcleo de tabuleiro já testado.
 
-O formato local e a regra de vitória ainda precisam ser confirmados. A invisibilidade do Ninja também precisa de uma solução para ocultar informações entre jogadores na mesma tela. Veja [Regras](docs/Regras.md).
+O formato atual é local para duas pessoas e termina por xeque-mate ou afogamento. A adaptação das condições de vitória para o modo RPG e a invisibilidade do Ninja continuam pendentes. Veja [Regras](docs/Regras.md).
 
 ## Documentação
 

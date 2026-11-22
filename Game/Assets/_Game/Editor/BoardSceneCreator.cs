@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using UnityEditor;
 using UnityEditor.SceneManagement;
@@ -7,6 +8,8 @@ using UnityEngine.InputSystem.UI;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using XadrezRpg.Board;
+using XadrezRpg.Pieces;
+using XadrezRpg.Turns;
 
 namespace XadrezRpg.Editor
 {
@@ -17,6 +20,17 @@ namespace XadrezRpg.Editor
 
         private const float ArtworkPixelSize = 1254f;
         private const float ArtworkDisplaySize = 718f;
+        private static readonly PieceType[] BackRankPieces =
+        {
+            PieceType.Rook,
+            PieceType.Knight,
+            PieceType.Bishop,
+            PieceType.Queen,
+            PieceType.King,
+            PieceType.Bishop,
+            PieceType.Knight,
+            PieceType.Rook
+        };
 
         private static readonly float[] ArtworkColumnEdges =
         {
@@ -31,12 +45,16 @@ namespace XadrezRpg.Editor
         [MenuItem("Xadrez RPG/Create Board Scene")]
         public static void CreateBoardScene()
         {
+            PieceSpriteImportSettings.ConfigureAll();
             Scene scene = EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
 
             CreateCamera();
             Canvas canvas = CreateCanvas();
-            CreateBoard(canvas.transform);
-            CreateInterfaceText(canvas.transform);
+            BoardView board = CreateBoard(canvas.transform);
+            Text status = CreateInterfaceText(canvas.transform);
+            PromotionControls promotion = CreatePromotionPanel(canvas.transform);
+            Button restart = CreateButton(canvas.transform, "Restart", "Reiniciar partida", new Vector2(540f, -280f), new Vector2(270f, 58f));
+            CreateGameController(canvas.transform, board, status, promotion, restart);
             CreateEventSystem();
 
             EditorSceneManager.MarkSceneDirty(scene);
@@ -81,7 +99,7 @@ namespace XadrezRpg.Editor
             return canvas;
         }
 
-        private static void CreateBoard(Transform canvas)
+        private static BoardView CreateBoard(Transform canvas)
         {
             Sprite artwork = AssetDatabase.LoadAllAssetsAtPath(ArtworkPath)
                 .OfType<Sprite>()
@@ -130,23 +148,98 @@ namespace XadrezRpg.Editor
                 ArtworkColumnEdges,
                 ArtworkRowEdges);
             board.GenerateBoard();
+            CreateStandardPieces(board);
             Selection.activeGameObject = boardObject;
+            return board;
         }
 
-        private static void CreateInterfaceText(Transform canvas)
+        private static void CreateStandardPieces(BoardView board)
+        {
+            for (int file = 0; file < BoardCoordinate.BoardSize; file++)
+            {
+                CreatePiece(board, new BoardCoordinate(file, 0), BackRankPieces[file], PieceColor.Light);
+                CreatePiece(board, new BoardCoordinate(file, 1), PieceType.Pawn, PieceColor.Light);
+                CreatePiece(board, new BoardCoordinate(file, 6), PieceType.Pawn, PieceColor.Dark);
+                CreatePiece(board, new BoardCoordinate(file, 7), BackRankPieces[file], PieceColor.Dark);
+            }
+        }
+
+        private static void CreatePiece(
+            BoardView board,
+            BoardCoordinate coordinate,
+            PieceType type,
+            PieceColor color)
+        {
+            if (!board.TryGetTile(coordinate, out BoardTileView tile))
+            {
+                Debug.LogError($"Could not place {color} {type} at {coordinate}.");
+                return;
+            }
+
+            Sprite sprite = LoadPieceSprite(type, color);
+            if (sprite == null)
+            {
+                Debug.LogError($"Missing sprite for {color} {type}.");
+                return;
+            }
+
+            PieceView.Create(tile, type, color, coordinate, sprite);
+        }
+
+        private static Sprite LoadPieceSprite(PieceType type, PieceColor color)
+        {
+            string colorName = color == PieceColor.Light ? "Brancas" : "Pretas";
+            string folder;
+            string typeName;
+
+            switch (type)
+            {
+                case PieceType.Pawn:
+                    folder = "Pawn";
+                    typeName = "Peao";
+                    break;
+                case PieceType.Rook:
+                    folder = "Rook";
+                    typeName = "Torre";
+                    break;
+                case PieceType.Knight:
+                    folder = "Horse";
+                    typeName = "Cavalo";
+                    break;
+                case PieceType.Bishop:
+                    folder = "Bishop";
+                    typeName = "Bispo";
+                    break;
+                case PieceType.Queen:
+                    folder = "Queen";
+                    typeName = "Rainha";
+                    break;
+                case PieceType.King:
+                    folder = "King";
+                    typeName = "Rei";
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(type), type, null);
+            }
+
+            string path = $"Assets/_Game/Sprites/Pieces/{folder}/{colorName}_{typeName}.png";
+            return AssetDatabase.LoadAssetAtPath<Sprite>(path);
+        }
+
+        private static Text CreateInterfaceText(Transform canvas)
         {
             Font font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
             CreateText(canvas, "Title", "Xadrez RPG", font, 42, new Vector2(0f, 425f));
-            CreateText(
+            return CreateText(
                 canvas,
-                "Instructions",
-                "Clique em uma casa para selecionar",
+                "Game Status",
+                "Vez das peças claras",
                 font,
                 24,
                 new Vector2(0f, -420f));
         }
 
-        private static void CreateText(
+        private static Text CreateText(
             Transform parent,
             string objectName,
             string content,
@@ -174,6 +267,103 @@ namespace XadrezRpg.Editor
             text.alignment = TextAnchor.MiddleCenter;
             text.color = new Color(0.94f, 0.94f, 0.94f, 1f);
             text.raycastTarget = false;
+            return text;
+        }
+
+        private static PromotionControls CreatePromotionPanel(Transform canvas)
+        {
+            GameObject panelObject = new GameObject(
+                "Promotion Panel",
+                typeof(RectTransform),
+                typeof(CanvasRenderer),
+                typeof(Image));
+            panelObject.transform.SetParent(canvas, false);
+
+            RectTransform rect = (RectTransform)panelObject.transform;
+            rect.anchorMin = new Vector2(0.5f, 0.5f);
+            rect.anchorMax = new Vector2(0.5f, 0.5f);
+            rect.pivot = new Vector2(0.5f, 0.5f);
+            rect.anchoredPosition = new Vector2(540f, 30f);
+            rect.sizeDelta = new Vector2(300f, 270f);
+
+            Image background = panelObject.GetComponent<Image>();
+            background.color = new Color(0.08f, 0.09f, 0.1f, 0.96f);
+
+            Font font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+            Text title = CreateText(panelObject.transform, "Promotion Title", "Promover peão para:", font, 24, new Vector2(0f, 88f));
+            ((RectTransform)title.transform).sizeDelta = new Vector2(280f, 48f);
+
+            PromotionControls controls = new PromotionControls
+            {
+                Panel = panelObject,
+                Queen = CreateButton(panelObject.transform, "Queen", "Rainha", new Vector2(-72f, 25f), new Vector2(130f, 52f)),
+                Rook = CreateButton(panelObject.transform, "Rook", "Torre", new Vector2(72f, 25f), new Vector2(130f, 52f)),
+                Bishop = CreateButton(panelObject.transform, "Bishop", "Bispo", new Vector2(-72f, -45f), new Vector2(130f, 52f)),
+                Knight = CreateButton(panelObject.transform, "Knight", "Cavalo", new Vector2(72f, -45f), new Vector2(130f, 52f))
+            };
+            panelObject.SetActive(false);
+            return controls;
+        }
+
+        private static Button CreateButton(
+            Transform parent,
+            string objectName,
+            string label,
+            Vector2 position,
+            Vector2 size)
+        {
+            GameObject buttonObject = new GameObject(
+                objectName,
+                typeof(RectTransform),
+                typeof(CanvasRenderer),
+                typeof(Image),
+                typeof(Button));
+            buttonObject.transform.SetParent(parent, false);
+
+            RectTransform rect = (RectTransform)buttonObject.transform;
+            rect.anchorMin = new Vector2(0.5f, 0.5f);
+            rect.anchorMax = new Vector2(0.5f, 0.5f);
+            rect.pivot = new Vector2(0.5f, 0.5f);
+            rect.anchoredPosition = position;
+            rect.sizeDelta = size;
+
+            Image image = buttonObject.GetComponent<Image>();
+            image.color = new Color(0.36f, 0.24f, 0.13f, 1f);
+            Button button = buttonObject.GetComponent<Button>();
+            ColorBlock colors = button.colors;
+            colors.highlightedColor = new Color(0.58f, 0.4f, 0.2f, 1f);
+            colors.pressedColor = new Color(0.24f, 0.15f, 0.08f, 1f);
+            button.colors = colors;
+
+            Font font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+            Text text = CreateText(buttonObject.transform, "Label", label, font, 21, Vector2.zero);
+            RectTransform textRect = (RectTransform)text.transform;
+            textRect.anchorMin = Vector2.zero;
+            textRect.anchorMax = Vector2.one;
+            textRect.offsetMin = Vector2.zero;
+            textRect.offsetMax = Vector2.zero;
+            text.raycastTarget = false;
+            return button;
+        }
+
+        private static void CreateGameController(
+            Transform canvas,
+            BoardView board,
+            Text status,
+            PromotionControls promotion,
+            Button restart)
+        {
+            GameObject controllerObject = new GameObject("Chess Game Controller", typeof(ChessGameController));
+            controllerObject.transform.SetParent(canvas, false);
+            controllerObject.GetComponent<ChessGameController>().Configure(
+                board,
+                status,
+                promotion.Panel,
+                promotion.Queen,
+                promotion.Rook,
+                promotion.Bishop,
+                promotion.Knight,
+                restart);
         }
 
         private static void CreateEventSystem()
@@ -191,6 +381,15 @@ namespace XadrezRpg.Editor
             EditorBuildSettings.scenes = new[] { new EditorBuildSettingsScene(ScenePath, true) }
                 .Concat(remainingScenes)
                 .ToArray();
+        }
+
+        private sealed class PromotionControls
+        {
+            public GameObject Panel;
+            public Button Queen;
+            public Button Rook;
+            public Button Bishop;
+            public Button Knight;
         }
     }
 }
