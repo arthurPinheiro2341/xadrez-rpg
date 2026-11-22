@@ -9,12 +9,13 @@ Sem datas inventadas. Ajustar ao calendário da disciplina quando as próximas e
 - [x] Criar e preencher o repositório remoto no GitHub.
 - [ ] Confirmar versão Unity, regras pendentes e próximos prazos.
 - [x] Preparar gerador das pastas de scripts, sprites, cenas, prefabs e dados.
-- [ ] Criar projeto Unity real.
-- [ ] Executar o gerador e confirmar as pastas e seus .meta no editor.
+- [x] Criar projeto Unity real.
+- [x] Executar o gerador e confirmar as pastas e seus .meta no editor.
 
 ## Marco 1 — tabuleiro e seleção
 
-- [ ] Tabuleiro 8×8 com conversão entre coordenadas e posição.
+- [x] Tabuleiro 8×8 com conversão entre coordenadas e posição.
+- [x] Clique em casa e destaque visual da seleção.
 - [ ] Representação dos seis tipos de peças e dois jogadores.
 - [ ] Clique em peça e destaque de seleção.
 - [ ] Ocupação de casas consistente.

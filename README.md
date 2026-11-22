@@ -6,7 +6,7 @@ Repositório privado: [arthurPinheiro2341/xadrez-rpg](https://github.com/arthurP
 
 Um jogo de estratégia por turnos baseado no xadrez, em que as peças têm vida, dano e classes. Durante a partida, o jogador recebe moedas e pode transformar suas peças em variantes com habilidades diferentes.
 
-**Estado em 01/10/2026:** documentação inicial. Ainda não há jogo implementado, projeto Unity completo ou build jogável neste repositório. Os valores numéricos são propostas de teste.
+**Estado em 22/11/2026:** projeto Unity criado com Universal 2D e primeiro marco iniciado. A cena `Board` já apresenta um tabuleiro 8×8 com coordenadas e seleção visual de casas. Ainda não há peças, movimentação, combate ou build jogável; os valores numéricos continuam sendo propostas de teste.
 
 ## A ideia
 
@@ -54,4 +54,4 @@ Xadrez tradicional; Hearthstone, principalmente Campos de Batalha, como inspira�
 
 Use [Roadmap](docs/Roadmap.md) para escolher a próxima tarefa e [DevLog](docs/DevLog.md) para registrar a conclusão. Sugestão de fluxo: uma tarefa pequena por branch, commit, revisão e merge em `main`.
 
-Este pacote não inclui sprites prontos nem scripts de gameplay. As imagens geradas anteriormente foram discutidas na conversa, mas seus arquivos não estão presentes neste pacote.
+O projeto ainda não inclui sprites definitivos nem os sistemas de peças, movimentação, combate e evolução. As imagens geradas anteriormente foram discutidas na conversa, mas seus arquivos não estão presentes neste pacote.

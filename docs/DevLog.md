@@ -40,6 +40,18 @@
 
 **Estado:** gerador pronto no repositório; sua execução no computador de Arthur e a importação no editor ainda estão pendentes. Nenhuma implementação de gameplay foi acrescentada.
 
+## 22/11/2026 — projeto Unity e tabuleiro 8×8
+
+**Realizado:** criação do projeto `Game` em Unity 6000.6.10f1 com Universal 2D; execução do gerador de pastas; criação da cena `Assets/_Game/Scenes/Board.unity`; implementação de coordenadas algébricas, geração das 64 casas e seleção visual por clique.
+
+**Arquitetura:** `BoardCoordinate` converte entre arquivo/fileira, notação algébrica e índice visual; `BoardView` gera e consulta as casas; `BoardTileView` encaminha o clique e aplica o destaque. A ferramenta `Xadrez RPG/Create Board Scene` recria a cena inicial e a coloca primeiro no Build Settings.
+
+**Verificação:** projeto compilado sem erros; teste manual em Play Mode selecionou `a1` e depois transferiu a seleção para `d5`; 14 testes EditMode passaram no Unity Test Runner, cobrindo notação, entradas inválidas, orientação do tabuleiro, geração de 64 casas e seleção.
+
+**Estado:** tabuleiro e seleção de casas concluídos. Ainda não há peças, ocupação, movimento ou combate.
+
+**Próximo passo:** representar os seis tipos de peças para dois jogadores, posicioná-los na formação inicial e selecionar uma peça sem alterar a partida.
+
 ## Modelo para futuras entradas
 
 Data; tarefa; arquivos ou commit; comportamento entregue; verificação feita; problemas restantes; próximo passo.
