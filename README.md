@@ -6,7 +6,7 @@ Repositório privado: [arthurPinheiro2341/xadrez-rpg](https://github.com/arthurP
 
 Um jogo de estratégia por turnos baseado no xadrez, em que as peças têm vida, dano e classes. Durante a partida, o jogador recebe moedas e pode transformar suas peças em variantes com habilidades diferentes.
 
-**Estado em 22/11/2026:** a cena `Board` já oferece uma partida local de xadrez clássico para duas pessoas, com as 32 peças medievais, turnos, movimentos legais, captura, xeque, xeque-mate, afogamento, roque, en passant, promoção e reinício. Vida, dano, dinheiro, classes, bot e demais sistemas de RPG ainda não foram implementados.
+**Estado em 22/11/2026:** a cena `Board` inicia o RPG contra bot, com vida, dano, renda por turno, cinco evoluções e saltos. O painel também oferece RPG local e o xadrez clássico local anterior. Configurações, escolhas de balanceamento e testes estão em [RPG-Prototipo](docs/RPG-Prototipo.md).
 
 ## A ideia
 

@@ -1,6 +1,6 @@
 ﻿<Solution>
   <Project Path="XadrezRpg.Editor.csproj" />
-  <Project Path="XadrezRpg.Runtime.csproj" />
   <Project Path="XadrezRpg.Tests.EditMode.csproj" />
+  <Project Path="XadrezRpg.Runtime.csproj" />
   <Project Path="Unity.2D.Welcome.csproj" />
 </Solution>

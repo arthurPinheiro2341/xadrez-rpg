@@ -68,6 +68,20 @@
 
 ## Modelo para futuras entradas
 
+## 22/11/2026 — dificuldade, feedback e Valkíria
+
+Adicionados três níveis de decisão do bot: Fácil aleatório, Médio por avaliação imediata e Difícil com simulação limitada de respostas. Mesmas regras e valores para os dois jogadores. Ações passam a ter prévia, destaque persistente da origem/destino, última ação do bot e histórico com rolagem. O dano da Valkíria caiu de 5 para 3, em configuração própria, preservando a Rainha comum. Os 44 testes EditMode passaram. Validado em Play Mode o fluxo de seleção, resposta do bot Difícil e histórico e7–e5 com destaque de casas.
+
+## 22/11/2026 — ajuste da catapulta e leitura do tabuleiro
+
+Removidos os textos de vida acima das peças; vida permanece no painel da seleção. Sprites continuam usando PNG. Tiro da catapulta reduzido de 4 para 1 de dano e alcance de 4 para 2 casas; ataque comum conserva 4 de dano. Bot avalia o dano específico do tiro. Painel registra o último ataque com origem, destino e dano. Os 37 testes EditMode passaram, incluindo três verificações novas de dano e alcance.
+
+## 22/11/2026 — integração RPG
+
+Integrados vida, dano, morte do Rei, renda por turno, evolução confirmada, cinco classes, salto em arco e bot simples. Preservado o modo clássico local e adicionado RPG local. Importados 10 PNGs e preservados 10 originais Aseprite de `classes_xadrez`. Balanceamento em `RpgBalance.asset`; decisões e instruções em `RPG-Prototipo.md`.
+
+Verificação: 34 testes EditMode aprovados e partida curta em Play Mode com resposta do bot e atualização de saldo. Build externa e balanceamento por playtest pendentes.
+
 Data; tarefa; arquivos ou commit; comportamento entregue; verificação feita; problemas restantes; próximo passo.
 
 Não marcar gameplay concluído só porque um script existe. Registrar se foi compilado, testado em cena e verificado em build.

@@ -175,7 +175,7 @@ namespace XadrezRpg.Turns
             return false;
         }
 
-        public void LoadFen(string fen)
+        public void LoadFen(string fen, bool evaluateStatus = true)
         {
             if (string.IsNullOrWhiteSpace(fen))
             {
@@ -235,10 +235,11 @@ namespace XadrezRpg.Turns
             FullmoveNumber = fields.Length > 5 && int.TryParse(fields[5], out int fullmove) ? fullmove : 1;
             Status = ChessGameStatus.Active;
             Winner = null;
-            UpdateGameStatus();
+            if (evaluateStatus) UpdateGameStatus();
         }
 
-        private IEnumerable<ChessMove> GeneratePseudoLegalMoves(BoardCoordinate from)
+        // RPG combat shares classical geometry, but permits attacking the King and ignores check.
+        public IEnumerable<ChessMove> GeneratePseudoLegalMoves(BoardCoordinate from)
         {
             ChessPiece piece = GetPiece(from);
             if (piece == null)

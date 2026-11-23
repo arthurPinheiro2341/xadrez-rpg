@@ -10,6 +10,8 @@ namespace XadrezRpg.Turns
 {
     public sealed class ChessGameController : MonoBehaviour
     {
+        public static int RequestedMode;
+        [SerializeField] private XadrezRpg.Combat.RpgBalance rpgBalance;
         [SerializeField] private BoardView boardView;
         [SerializeField] private Text statusText;
         [SerializeField] private GameObject promotionPanel;
@@ -53,6 +55,14 @@ namespace XadrezRpg.Turns
 
         private void Start()
         {
+            if (RequestedMode != 2)
+            {
+                promotionPanel.SetActive(false);
+                restartButton.gameObject.SetActive(false);
+                var rpg = gameObject.AddComponent<XadrezRpg.Combat.RpgController>();
+                rpg.Initialize(boardView, statusText, rpgBalance, RequestedMode == 0);
+                return;
+            }
             CacheInitialPieceViews();
             boardView.SelectionChanged += OnBoardSelectionChanged;
             queenPromotionButton.onClick.AddListener(() => CompletePromotion(PieceType.Queen));
@@ -63,6 +73,15 @@ namespace XadrezRpg.Turns
             promotionPanel.SetActive(false);
             ClearSelection();
             UpdateStatus();
+        }
+
+        private void OnGUI()
+        {
+            if (RequestedMode == 2 && GUI.Button(new Rect(10, 10, 185, 32), "Jogar RPG contra bot"))
+            {
+                RequestedMode = 0;
+                UnityEngine.SceneManagement.SceneManager.LoadScene(UnityEngine.SceneManagement.SceneManager.GetActiveScene().buildIndex);
+            }
         }
 
         private void OnDestroy()
